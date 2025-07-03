@@ -11,11 +11,15 @@ import java.util.List;
  */
 public interface RoomDao {
 
-	public List getRooms() throws RoomException;
+        public List getRooms() throws RoomException;
 
-	public List getEmptyRooms() throws RoomException;
+        public List getEmptyRooms() throws RoomException;
 
-	public Room getRoom(String roomNumber) throws RoomException;
+        public List getEmptyRooms(String type) throws RoomException;
 
-	public void updateRoom(Room room) throws RoomException;
+        public Room getRoom(String roomNumber) throws RoomException;
+
+        public void updateRoom(Room room) throws RoomException;
+
+        public void createRoom(Room room) throws RoomException;
 }

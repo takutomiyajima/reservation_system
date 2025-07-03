@@ -7,6 +7,8 @@ import java.util.Date;
 
 import util.DateUtil;
 import domain.DaoFactory;
+import domain.room.RoomDao;
+import domain.room.RoomException;
 
 /**
  * Manager for payments<br>
@@ -17,13 +19,14 @@ public class PaymentManager {
 	/**
 	 * Fee per one night<br>
 	 */
-	private static final int RATE_PER_DAY = 8000;
+        private static final int RATE_STANDARD = 8000;
+        private static final int RATE_SUITE = 12000;
 
-	public void createPayment(Date stayingDate, String roomNumber) throws PaymentException,
-			NullPointerException {
-		if (stayingDate == null) {
-			throw new NullPointerException("stayingDate");
-		}
+        public void createPayment(Date stayingDate, String roomNumber) throws PaymentException,
+                        NullPointerException {
+                if (stayingDate == null) {
+                        throw new NullPointerException("stayingDate");
+                }
 		if (roomNumber == null) {
 			throw new NullPointerException("roomNumber");
 		}
@@ -31,16 +34,29 @@ public class PaymentManager {
 		Payment payment = new Payment();
 		payment.setStayingDate(stayingDate);
 		payment.setRoomNumber(roomNumber);
-		payment.setAmount(getRatePerDay(roomNumber));
+                try {
+                        payment.setAmount(getRatePerDay(roomNumber));
+                } catch (RoomException e) {
+                        PaymentException pe = new PaymentException(PaymentException.CODE_DB_EXEC_QUERY_ERROR, e);
+                        throw pe;
+                }
 		payment.setStatus(Payment.PAYMENT_STATUS_CREATE);
 
 		PaymentDao paymentDao = getPaymentDao();
 		paymentDao.createPayment(payment);
 	}
 
-	private int getRatePerDay(String roomNumber) {
-		return RATE_PER_DAY;
-	}
+        private int getRatePerDay(String roomNumber) throws RoomException {
+                RoomDao roomDao = DaoFactory.getInstance().getRoomDao();
+                domain.room.Room room = roomDao.getRoom(roomNumber);
+                if (room == null) {
+                        return RATE_STANDARD;
+                }
+                if (domain.room.RoomType.SUITE.equals(room.getType())) {
+                        return RATE_SUITE;
+                }
+                return RATE_STANDARD;
+        }
 
 	public void consumePayment(Date stayingDate, String roomNumber) throws PaymentException,
 			NullPointerException {

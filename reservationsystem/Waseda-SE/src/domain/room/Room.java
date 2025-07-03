@@ -11,9 +11,11 @@ import java.util.Date;
  */
 public class Room {
 
-	private String roomNumber;
+        private String roomNumber;
 
-	private Date stayingDate;
+        private Date stayingDate;
+
+        private String type;
 
 	public String getRoomNumber() {
 		return roomNumber;
@@ -27,7 +29,15 @@ public class Room {
 		return stayingDate;
 	}
 
-	public void setStayingDate(Date stayingDate) {
-		this.stayingDate = stayingDate;
-	}
+        public void setStayingDate(Date stayingDate) {
+                this.stayingDate = stayingDate;
+        }
+
+        public String getType() {
+                return type;
+        }
+
+        public void setType(String type) {
+                this.type = type;
+        }
 }

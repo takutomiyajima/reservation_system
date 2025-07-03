@@ -67,13 +67,13 @@ public class RoomManager {
 		return rooms.size();
 	}
 
-	public String assignCustomer(Date stayingDate) throws RoomException, NullPointerException {
-		if (stayingDate == null) {
-			throw new NullPointerException("stayingDate");
-		}
-		RoomDao roomDao = getRoomDao();
-		// Obtain all of empty available rooms
-		List emptyRooms = roomDao.getEmptyRooms();
+        public String assignCustomer(Date stayingDate, String type) throws RoomException, NullPointerException {
+                if (stayingDate == null) {
+                        throw new NullPointerException("stayingDate");
+                }
+                RoomDao roomDao = getRoomDao();
+                // Obtain all of empty available rooms for the type
+                List emptyRooms = roomDao.getEmptyRooms(type);
 		// If there is no empty available rooms
 		if (emptyRooms.size() == 0) {
 			RoomException exception = new RoomException(RoomException.CODE_EMPTYROOM_NOT_FOUND);
@@ -86,7 +86,7 @@ public class RoomManager {
 		return roomNumber;
 	}
 
-	public Date removeCustomer(String roomNumber) throws RoomException, NullPointerException {
+        public Date removeCustomer(String roomNumber) throws RoomException, NullPointerException {
 		if (roomNumber == null) {
 			throw new NullPointerException("roomNumber");
 		}
@@ -105,9 +105,17 @@ public class RoomManager {
 			throw exception;
 		}
 		room.setStayingDate(null);
-		roomDao.updateRoom(room);
-		return stayingDate;
-	}
+                roomDao.updateRoom(room);
+                return stayingDate;
+        }
+
+        public void createRoom(Room room) throws RoomException, NullPointerException {
+                if (room == null) {
+                        throw new NullPointerException("room");
+                }
+                RoomDao roomDao = getRoomDao();
+                roomDao.createRoom(room);
+        }
 
 	private AvailableQtyDao getAvailableQtyDao() {
 		return DaoFactory.getInstance().getAvailableQtyDao();
