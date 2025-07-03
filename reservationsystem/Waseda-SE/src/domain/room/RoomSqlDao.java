@@ -27,7 +27,9 @@ public class RoomSqlDao implements RoomDao {
 
 	private static final String URL = "jdbc:hsqldb:hsql://localhost;shutdown=true";
 
-	private static final String TABLE_NAME = "ROOM";
+        private static final String TABLE_NAME = "ROOM";
+
+        private static final String COL_TYPE = "type";
 
 	/**
 	 * @see domain.room.RoomDao#getRooms()
@@ -72,8 +74,10 @@ public class RoomSqlDao implements RoomDao {
 		try {
 			connection = getConnection();
 			statement = connection.createStatement();
-			sql.append("SELECT roomnumber, stayingdate FROM ");
-			sql.append(TABLE_NAME);
+                        sql.append("SELECT roomnumber, stayingdate, ");
+                        sql.append(COL_TYPE);
+                        sql.append(" FROM ");
+                        sql.append(TABLE_NAME);
 			sql.append(" WHERE ROOMNUMBER='");
 			sql.append(roomNumber);
 			sql.append("';");
@@ -82,7 +86,8 @@ public class RoomSqlDao implements RoomDao {
 			if (resultSet.next() == true) {
 				room = new Room();
 				room.setRoomNumber(roomNumber);
-				room.setStayingDate(DateUtil.convertToDate(resultSet.getString("stayingDate")));
+                                room.setStayingDate(DateUtil.convertToDate(resultSet.getString("stayingDate")));
+                                room.setType(resultSet.getString(COL_TYPE));
 			}
 		}
 		catch (SQLException e) {
@@ -96,30 +101,48 @@ public class RoomSqlDao implements RoomDao {
 		return room;
 	}
 
-	/**
-	 * @see domain.room.RoomDao#getEmptyRooms()
-	 */
-	public List getEmptyRooms() throws RoomException {
-		StringBuffer sql = new StringBuffer();
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
-		List emptyRoomList = new ArrayList();
-		try {
-			connection = getConnection();
-			statement = connection.createStatement();
-			sql.append("SELECT roomnumber FROM ");
-			sql.append(TABLE_NAME);
-			sql.append(" WHERE stayingdate='';");
-			resultSet = statement.executeQuery(sql.toString());
-			while (resultSet.next()) {
-				Room room = new Room();
-				room.setRoomNumber(resultSet.getString("roomnumber"));
-				emptyRoomList.add(room);
-			}
-		}
-		catch (SQLException e) {
-			RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
+        /**
+         * @see domain.room.RoomDao#getEmptyRooms()
+         */
+        public List getEmptyRooms() throws RoomException {
+                return getEmptyRooms(null);
+        }
+
+        /**
+         * @see domain.room.RoomDao#getEmptyRooms(java.lang.String)
+         */
+        public List getEmptyRooms(String type) throws RoomException {
+                StringBuffer sql = new StringBuffer();
+                Statement statement = null;
+                ResultSet resultSet = null;
+                Connection connection = null;
+                List emptyRoomList = new ArrayList();
+                try {
+                        connection = getConnection();
+                        statement = connection.createStatement();
+                        sql.append("SELECT roomnumber, ");
+                        sql.append(COL_TYPE);
+                        sql.append(" FROM ");
+                        sql.append(TABLE_NAME);
+                        sql.append(" WHERE stayingdate=''");
+                        if (type != null) {
+                                sql.append(" AND ");
+                                sql.append(COL_TYPE);
+                                sql.append("='");
+                                sql.append(type);
+                                sql.append("'");
+                        }
+                        sql.append(";");
+                        resultSet = statement.executeQuery(sql.toString());
+                        while (resultSet.next()) {
+                                Room room = new Room();
+                                room.setRoomNumber(resultSet.getString("roomnumber"));
+                                room.setType(resultSet.getString(COL_TYPE));
+                                emptyRoomList.add(room);
+                        }
+                }
+                catch (SQLException e) {
+                        RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
 			exception.getDetailMessages().add("getEmptyRooms()");
 			throw exception;
 		}
@@ -132,7 +155,7 @@ public class RoomSqlDao implements RoomDao {
 	/**
 	 * @see domain.room.RoomDao#updateRoom(domain.room.Room)
 	 */
-	public void updateRoom(Room room) throws RoomException {
+        public void updateRoom(Room room) throws RoomException {
 		StringBuffer sql = new StringBuffer();
 		Statement statement = null;
 		Connection connection = null;
@@ -162,11 +185,44 @@ public class RoomSqlDao implements RoomDao {
 			exception.getDetailMessages().add("updateRoom()");
 			throw exception;
 		}
-		finally {
-			close(resultSet, statement, connection);
-		}
+                finally {
+                        close(resultSet, statement, connection);
+                }
 
-	}
+        }
+
+        /**
+         * @see domain.room.RoomDao#createRoom(domain.room.Room)
+         */
+        public void createRoom(Room room) throws RoomException {
+                StringBuffer sql = new StringBuffer();
+                Statement statement = null;
+                Connection connection = null;
+                ResultSet resultSet = null;
+                try {
+                        connection = getConnection();
+                        statement = connection.createStatement();
+                        sql.append("INSERT INTO ");
+                        sql.append(TABLE_NAME);
+                        sql.append(" (roomnumber, stayingdate, ");
+                        sql.append(COL_TYPE);
+                        sql.append(") values ('");
+                        sql.append(room.getRoomNumber());
+                        sql.append("', '' , '");
+                        sql.append(room.getType());
+                        sql.append("');");
+                        resultSet = statement.executeQuery(sql.toString());
+                }
+                catch (SQLException e) {
+                        RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
+                        exception.getDetailMessages().add("createRoom()");
+                        throw exception;
+                }
+                finally {
+                        close(resultSet, statement, connection);
+                }
+
+        }
 
 	private Connection getConnection() throws RoomException {
 		Connection connection = null;

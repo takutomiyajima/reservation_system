@@ -13,6 +13,7 @@ import app.AppException;
 import app.checkin.CheckInRoomForm;
 import app.checkout.CheckOutRoomForm;
 import app.reservation.ReserveRoomForm;
+import domain.room.RoomType;
 
 /**
  * CUI class for Hotel Reservation Systems
@@ -88,9 +89,15 @@ public class CUI {
 			return;
 		}
 
-		ReserveRoomForm reserveRoomForm = new ReserveRoomForm();
-		reserveRoomForm.setStayingDate(stayingDate);
-		String reservationNumber = reserveRoomForm.submitReservation();
+                System.out.println("Select room type: 1: Standard 2: Suite");
+                System.out.print("> ");
+                String typeStr = reader.readLine();
+                String roomType = "1".equals(typeStr) ? RoomType.STANDARD : RoomType.SUITE;
+
+                ReserveRoomForm reserveRoomForm = new ReserveRoomForm();
+                reserveRoomForm.setStayingDate(stayingDate);
+                reserveRoomForm.setRoomType(roomType);
+                String reservationNumber = reserveRoomForm.submitReservation();
 
 		System.out.println("Reservation has been completed.");
 		System.out.println("Arrival (staying) date is " + DateUtil.convertToString(stayingDate) + ".");

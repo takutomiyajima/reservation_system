@@ -11,6 +11,7 @@ import domain.payment.PaymentManager;
 import domain.payment.PaymentException;
 import domain.reservation.ReservationManager;
 import domain.reservation.ReservationException;
+import domain.reservation.Reservation;
 import domain.room.RoomManager;
 import domain.room.RoomException;
 
@@ -23,12 +24,14 @@ public class CheckInRoomControl {
 	public String checkIn(String reservationNumber) throws AppException {
 		try {
 			//Consume reservation
-			ReservationManager reservationManager = getReservationManager();
-			Date stayingDate = reservationManager.consumeReservation(reservationNumber);
+                        ReservationManager reservationManager = getReservationManager();
+                        domain.reservation.Reservation reservation = reservationManager.consumeReservation(reservationNumber);
+                        Date stayingDate = reservation.getStayingDate();
+                        String roomType = reservation.getRoomType();
 
 			//Assign room
 			RoomManager roomManager = getRoomManager();
-			String roomNumber = roomManager.assignCustomer(stayingDate);
+                        String roomNumber = roomManager.assignCustomer(stayingDate, roomType);
 
 			//Create payment
 			PaymentManager paymentManager = getPaymentManager();
