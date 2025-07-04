@@ -35,7 +35,7 @@ public class ReservationSqlDao implements ReservationDao {
 	public Reservation getReservation(String reservationNumber) throws ReservationException {
 		StringBuffer sql = new StringBuffer();
 		Statement statement = null;
-		ResultSet resultSet = null;
+                ResultSet resultSet = null; // unused when executing update
 		Connection connection = null;
 		Reservation reservation = null;
 		try {
@@ -48,7 +48,7 @@ public class ReservationSqlDao implements ReservationDao {
 			sql.append(" WHERE RESERVATIONNUMBER= '");
 			sql.append(reservationNumber);
 			sql.append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next() == true) {
 				reservation = new Reservation();
 				reservation.setReservationNumber(reservationNumber);
@@ -88,7 +88,7 @@ public class ReservationSqlDao implements ReservationDao {
 			sql.append("' where reservationNumber='");
 			sql.append(reservation.getReservationNumber());
 			sql.append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			ReservationException exception = new ReservationException(
@@ -126,7 +126,7 @@ public class ReservationSqlDao implements ReservationDao {
                         sql.append("', '");
                         sql.append(reservation.getRoomType());
                         sql.append("');");
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			ReservationException exception = new ReservationException(

@@ -47,7 +47,7 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append("' AND stayingdate='");
 			sql.append(DateUtil.convertToString(stayingDate));
 			sql.append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 			if (resultSet.next() == true) {
 				payment = new Payment();
 				payment.setRoomNumber(roomNumber);
@@ -87,7 +87,7 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append(payment.getRoomNumber());
 			sql.append("';");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			PaymentException exception = new PaymentException(
@@ -120,10 +120,10 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append("', '");
 			sql.append(payment.getAmount());
 			sql.append("', '");
-			sql.append(payment.getStatus());
-			sql.append("');");
+                        sql.append(payment.getStatus());
+                        sql.append("');");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			PaymentException exception = new PaymentException(

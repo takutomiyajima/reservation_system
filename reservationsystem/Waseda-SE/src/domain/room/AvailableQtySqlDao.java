@@ -24,7 +24,7 @@ public class AvailableQtySqlDao implements AvailableQtyDao {
 
 	private static final String DRIVER_NAME = "org.hsqldb.jdbcDriver";
 
-	private static final String URL = "jdbc:hsqldb:hsql://localhost;shutdown=true";
+        private static final String URL = "jdbc:hsqldb:hsql://localhost/mydb;shutdown=true";
 
 	private static final String TABLE_NAME = "AVAILABLEQTY";
 
@@ -46,7 +46,7 @@ public class AvailableQtySqlDao implements AvailableQtyDao {
 			sql.append(DateUtil.convertToString(date));
 			sql.append("';");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next() == true) {
 				availableQty = new AvailableQty();
 				availableQty.setDate(date);
@@ -86,7 +86,7 @@ public class AvailableQtySqlDao implements AvailableQtyDao {
 			sql.append(DateUtil.convertToString(availableQty.getDate()));
 			sql.append("';");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
@@ -118,7 +118,7 @@ public class AvailableQtySqlDao implements AvailableQtyDao {
 			sql.append(availableQty.getQty());
 			sql.append("');");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
