@@ -122,8 +122,8 @@ public class RoomSqlDao implements RoomDao {
 			} else {
 				sql.append("'").append(DateUtil.convertToString(room.getStayingDate())).append("'");
 			}
-			sql.append(" WHERE roomnumber='").append(room.getRoomNumber()).append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        sql.append(" WHERE roomnumber='").append(room.getRoomNumber()).append("';");
+                        statement.executeUpdate(sql.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
@@ -145,9 +145,11 @@ public class RoomSqlDao implements RoomDao {
 		try {
 			connection = getConnection();
 			statement = connection.createStatement();
-			sql.append("INSERT INTO ").append(TABLE_NAME)
-				.append(" (roomnumber, stayingdate) VALUES ('")
-				.append(room.getRoomNumber()).append("', '');");
+                        sql.append("INSERT INTO ").append(TABLE_NAME)
+                                .append(" (roomnumber, stayingdate, ")
+                                .append(COL_TYPE).append(") VALUES ('")
+                                .append(room.getRoomNumber()).append("', '', '")
+                                .append(room.getType()).append("');");
 			statement.executeUpdate(sql.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
