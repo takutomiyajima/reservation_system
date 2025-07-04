@@ -24,7 +24,7 @@ public class PaymentSqlDao implements PaymentDao {
 
 	private static final String DRIVER_NAME = "org.hsqldb.jdbcDriver";
 
-	private static final String URL = "jdbc:hsqldb:hsql://localhost;shutdown=true";
+	private static final String URL = "jdbc:hsqldb:hsql://localhost/mydb;shutdown=true";
 
 	private static final String TABLE_NAME = "PAYMENT";
 
@@ -87,7 +87,7 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append(payment.getRoomNumber());
 			sql.append("';");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			PaymentException exception = new PaymentException(
@@ -120,10 +120,10 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append("', '");
 			sql.append(payment.getAmount());
 			sql.append("', '");
-			sql.append(payment.getStatus());
-			sql.append("');");
+                        sql.append(payment.getStatus());
+                        sql.append("');");
 
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			PaymentException exception = new PaymentException(
@@ -136,14 +136,14 @@ public class PaymentSqlDao implements PaymentDao {
 		}
 	}
 
-	/**
-	 * データベースコネクションを取得します。<br>
-	 * 
-	 * @return コネクション
-	 * @throws PaymentException
-	 *            データベースコネクション取得が失敗した場合に発生します。
-	 */
-	private Connection getConnection() throws PaymentException {
+        /**
+         * Obtain a connection to the database.
+         *
+         * @return connection
+         * @throws PaymentException
+         *            if acquiring the connection fails
+         */
+        private Connection getConnection() throws PaymentException {
 		Connection connection = null;
 		try {
 			Class.forName(DRIVER_NAME);

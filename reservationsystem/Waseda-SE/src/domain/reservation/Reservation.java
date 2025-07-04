@@ -17,9 +17,11 @@ public class Reservation {
 
 	private String reservationNumber;
 
-	private Date stayingDate;
+        private Date stayingDate;
 
-	private String status;
+        private String status;
+
+        private String roomType;
 
 	public String getReservationNumber() {
 		return reservationNumber;
@@ -41,7 +43,15 @@ public class Reservation {
 		return status;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+        public void setStatus(String status) {
+                this.status = status;
+        }
+
+        public String getRoomType() {
+                return roomType;
+        }
+
+        public void setRoomType(String roomType) {
+                this.roomType = roomType;
+        }
 }

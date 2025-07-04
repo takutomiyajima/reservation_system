@@ -23,9 +23,11 @@ public class ReservationSqlDao implements ReservationDao {
 
 	private static final String DRIVER_NAME = "org.hsqldb.jdbcDriver";
 
-	private static final String URL = "jdbc:hsqldb:hsql://localhost;shutdown=true";
+	private static final String URL = "jdbc:hsqldb:hsql://localhost/mydb;shutdown=true";
 
-	private static final String TABLE_NAME = "RESERVATION";
+        private static final String TABLE_NAME = "RESERVATION";
+
+        private static final String COL_TYPE = "type";
 
 	/**
 	 * @see domain.reservation.ReservationDao#getReservation(java.lang.String)
@@ -39,18 +41,21 @@ public class ReservationSqlDao implements ReservationDao {
 		try {
 			connection = getConnection();
 			statement = connection.createStatement();
-			sql.append("SELECT reservationnumber, stayingdate, status FROM ");
-			sql.append(TABLE_NAME);
+                        sql.append("SELECT reservationnumber, stayingdate, status, ");
+                        sql.append(COL_TYPE);
+                        sql.append(" FROM ");
+                        sql.append(TABLE_NAME);
 			sql.append(" WHERE RESERVATIONNUMBER= '");
 			sql.append(reservationNumber);
 			sql.append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next() == true) {
 				reservation = new Reservation();
 				reservation.setReservationNumber(reservationNumber);
 				reservation.setStatus(resultSet.getString("status"));
-				reservation.setStayingDate(DateUtil.convertToDate(resultSet
-						.getString("stayingDate")));
+                                reservation.setStayingDate(DateUtil.convertToDate(resultSet
+                                                .getString("stayingDate")));
+                                reservation.setRoomType(resultSet.getString(COL_TYPE));
 			}
 		}
 		catch (SQLException e) {
@@ -83,7 +88,7 @@ public class ReservationSqlDao implements ReservationDao {
 			sql.append("' where reservationNumber='");
 			sql.append(reservation.getReservationNumber());
 			sql.append("';");
-			resultSet = statement.executeQuery(sql.toString());
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			ReservationException exception = new ReservationException(
@@ -109,15 +114,19 @@ public class ReservationSqlDao implements ReservationDao {
 			statement = connection.createStatement();
 			sql.append("INSERT INTO ");
 			sql.append(TABLE_NAME);
-			sql.append(" (reservationNumber, stayingDate, status) ");
+                        sql.append(" (reservationNumber, stayingDate, status, ");
+                        sql.append(COL_TYPE);
+                        sql.append(") ");
 			sql.append("values ('");
 			sql.append(reservation.getReservationNumber());
 			sql.append("', '");
 			sql.append(DateUtil.convertToString(reservation.getStayingDate()));
 			sql.append("', '");
-			sql.append(reservation.getStatus());
-			sql.append("');");
-			resultSet = statement.executeQuery(sql.toString());
+                        sql.append(reservation.getStatus());
+                        sql.append("', '");
+                        sql.append(reservation.getRoomType());
+                        sql.append("');");
+                        statement.executeUpdate(sql.toString());
 		}
 		catch (SQLException e) {
 			ReservationException exception = new ReservationException(

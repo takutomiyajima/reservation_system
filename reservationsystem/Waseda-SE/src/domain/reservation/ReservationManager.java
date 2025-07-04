@@ -14,17 +14,18 @@ import domain.DaoFactory;
  */
 public class ReservationManager {
 	
-	public String createReservation(Date stayingDate) throws ReservationException,
-			NullPointerException {
-		if (stayingDate == null) {
-			throw new NullPointerException("stayingDate");
-		}
+        public String createReservation(Date stayingDate, String roomType) throws ReservationException,
+                        NullPointerException {
+                if (stayingDate == null) {
+                        throw new NullPointerException("stayingDate");
+                }
 
 		Reservation reservation = new Reservation();
 		String reservationNumber = generateReservationNumber();
 		reservation.setReservationNumber(reservationNumber);
 		reservation.setStayingDate(stayingDate);
-		reservation.setStatus(Reservation.RESERVATION_STATUS_CREATE);
+                reservation.setStatus(Reservation.RESERVATION_STATUS_CREATE);
+                reservation.setRoomType(roomType);
 
 		ReservationDao reservationDao = getReservationDao();
 		reservationDao.createReservation(reservation);
@@ -41,8 +42,8 @@ public class ReservationManager {
 		return String.valueOf(calendar.getTimeInMillis());
 	}
 
-	public Date consumeReservation(String reservationNumber) throws ReservationException,
-			NullPointerException {
+        public Reservation consumeReservation(String reservationNumber) throws ReservationException,
+                        NullPointerException {
 		if (reservationNumber == null) {
 			throw new NullPointerException("reservationNumber");
 		}
@@ -64,11 +65,10 @@ public class ReservationManager {
 			throw exception;
 		}
 
-		Date stayingDate = reservation.getStayingDate();
-		reservation.setStatus(Reservation.RESERVATION_STATUS_CONSUME);
-		reservationDao.updateReservation(reservation);
-		return stayingDate;
-	}
+                reservation.setStatus(Reservation.RESERVATION_STATUS_CONSUME);
+                reservationDao.updateReservation(reservation);
+                return reservation;
+        }
 
 	private ReservationDao getReservationDao() {
 		return DaoFactory.getInstance().getReservationDao();

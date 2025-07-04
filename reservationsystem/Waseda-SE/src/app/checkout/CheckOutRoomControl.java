@@ -18,17 +18,14 @@ import domain.room.RoomException;
  */
 public class CheckOutRoomControl {
 	
-	public void checkOut(String roomNumber) throws AppException {
-		try {
-			//Clear room
-			/*
-			 * Your code for clearing room by using domain.room.RoomManager
-			 */
-			//Consume payment
-			/*
-			 * Your code for consuming payment by using domain.payment.PaymentManager
-			 */
-		}
+        public void checkOut(String roomNumber) throws AppException {
+                try {
+                        RoomManager roomManager = getRoomManager();
+                        Date stayingDate = roomManager.removeCustomer(roomNumber);
+
+                        PaymentManager paymentManager = getPaymentManager();
+                        paymentManager.consumePayment(stayingDate, roomNumber);
+                }
 		catch (RoomException e) {
 			AppException exception = new AppException("Failed to check-out", e);
 			exception.getDetailMessages().add(e.getMessage());
