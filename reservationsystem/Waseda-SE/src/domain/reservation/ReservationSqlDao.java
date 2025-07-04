@@ -35,7 +35,7 @@ public class ReservationSqlDao implements ReservationDao {
 	public Reservation getReservation(String reservationNumber) throws ReservationException {
 		StringBuffer sql = new StringBuffer();
 		Statement statement = null;
-                ResultSet resultSet = null; // unused when executing update
+		ResultSet resultSet = null;
 		Connection connection = null;
 		Reservation reservation = null;
 		try {

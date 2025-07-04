@@ -82,11 +82,18 @@ public class RoomSqlDao implements RoomDao {
 		try {
 			connection = getConnection();
 			statement = connection.createStatement();
-			sql.append("SELECT roomnumber, ").append(COL_TYPE)
-				.append(" FROM ").append(TABLE_NAME)
-				.append(" WHERE stayingdate=''");
+			sql.append("SELECT roomnumber, ");
+			sql.append(COL_TYPE);
+			sql.append(" FROM ");
+			sql.append(TABLE_NAME);
+			sql.append(" WHERE stayingdate=''");
 			if (type != null) {
-				sql.append(" AND ").append(COL_TYPE).append("='").append(type).append("'");
+				// 小文字同士で比較するよう修正（両方を LOWER に）
+				sql.append(" AND LOWER(");
+				sql.append(COL_TYPE);
+				sql.append(") = LOWER('");
+				sql.append(type);
+				sql.append("')");
 			}
 			sql.append(";");
 			resultSet = statement.executeQuery(sql.toString());
@@ -97,7 +104,6 @@ public class RoomSqlDao implements RoomDao {
 				emptyRoomList.add(room);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			RoomException exception = new RoomException(RoomException.CODE_DB_EXEC_QUERY_ERROR, e);
 			exception.getDetailMessages().add("getEmptyRooms()");
 			throw exception;
@@ -105,7 +111,7 @@ public class RoomSqlDao implements RoomDao {
 			close(resultSet, statement, connection);
 		}
 		return emptyRoomList;
-	}
+	}	
 
 	public void updateRoom(Room room) throws RoomException {
 		StringBuffer sql = new StringBuffer();

@@ -47,7 +47,7 @@ public class PaymentSqlDao implements PaymentDao {
 			sql.append("' AND stayingdate='");
 			sql.append(DateUtil.convertToString(stayingDate));
 			sql.append("';");
-                        statement.executeUpdate(sql.toString());
+			resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next() == true) {
 				payment = new Payment();
 				payment.setRoomNumber(roomNumber);
