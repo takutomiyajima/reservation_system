@@ -27,7 +27,7 @@ public class ReservationSqlDao implements ReservationDao {
 
         private static final String TABLE_NAME = "RESERVATION";
 
-        private static final String COL_TYPE = "type";
+        private static final String COL_TYPE = "ROOMTYPE";
 
 	/**
 	 * @see domain.reservation.ReservationDao#getReservation(java.lang.String)
