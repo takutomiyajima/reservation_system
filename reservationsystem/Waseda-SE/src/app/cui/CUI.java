@@ -13,6 +13,7 @@ import app.AppException;
 import app.checkin.CheckInRoomForm;
 import app.checkout.CheckOutRoomForm;
 import app.reservation.ReserveRoomForm;
+import app.cancel.CancelReservationForm;
 import domain.room.RoomType;
 
 /**
@@ -35,19 +36,20 @@ public class CUI {
 				int selectMenu;
 				System.out.println("");
 				System.out.println("Menu");
-				System.out.println("1: Reservation");
-				System.out.println("2: Check-in");
-				System.out.println("3: Check-out");
-				System.out.println("9: End");
+                                System.out.println("1: Reservation");
+                                System.out.println("2: Check-in");
+                                System.out.println("3: Check-out");
+                                System.out.println("4: Cancel reservation");
+                                System.out.println("9: End");
 				System.out.print("> ");
 
 				try {
 					String menu = reader.readLine();
 					selectMenu = Integer.parseInt(menu);
 				}
-				catch (NumberFormatException e) {
-					selectMenu = 4;
-				}
+                                catch (NumberFormatException e) {
+                                        selectMenu = 5;
+                                }
 
 				if (selectMenu == 9) {
 					break;
@@ -60,10 +62,13 @@ public class CUI {
 					case 2:
 						checkInRoom();
 						break;
-					case 3:
-						checkOutRoom();
-						break;
-				}
+                                        case 3:
+                                                checkOutRoom();
+                                                break;
+                                        case 4:
+                                                cancelReservation();
+                                                break;
+                                }
 			}
 			System.out.println("Ended");
 		}
@@ -124,9 +129,9 @@ public class CUI {
 
 	}
 
-	private void checkOutRoom() throws IOException, AppException {
-		System.out.println("Input room number");
-		System.out.print("> ");
+        private void checkOutRoom() throws IOException, AppException {
+                System.out.println("Input room number");
+                System.out.print("> ");
 
 		String roomNumber = reader.readLine();
 
@@ -137,9 +142,26 @@ public class CUI {
 
 		CheckOutRoomForm checkoutRoomForm = new CheckOutRoomForm();
 		checkoutRoomForm.setRoomNumber(roomNumber);
-		checkoutRoomForm.checkOut();
-		System.out.println("Check-out has been completed.");
-	}
+                checkoutRoomForm.checkOut();
+                System.out.println("Check-out has been completed.");
+        }
+
+        private void cancelReservation() throws IOException, AppException {
+                System.out.println("Input reservation number");
+                System.out.print("> ");
+
+                String reservationNumber = reader.readLine();
+
+                if (reservationNumber == null || reservationNumber.length() == 0) {
+                        System.out.println("Invalid reservation number");
+                        return;
+                }
+
+                CancelReservationForm cancelForm = new CancelReservationForm();
+                cancelForm.setReservationNumber(reservationNumber);
+                cancelForm.cancel();
+                System.out.println("Cancellation has been completed.");
+        }
 
 	public static void main(String[] args) throws Exception {
 		CUI cui = new CUI();
