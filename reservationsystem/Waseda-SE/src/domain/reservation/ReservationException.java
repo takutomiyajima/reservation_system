@@ -22,7 +22,9 @@ public class ReservationException extends Exception {
 
 	public static final int CODE_DB_CONNECT_ERROR = 4;
 
-	public static final int CODE_DB_CLOSE_ERROR = 5;
+        public static final int CODE_DB_CLOSE_ERROR = 5;
+
+        public static final int CODE_RESERVATION_ALREADY_CANCELED = 6;
 
 	private static final String MESSAGE_RESERVATION_NOT_FOUND = "Reservation not found";
 
@@ -32,7 +34,9 @@ public class ReservationException extends Exception {
 
 	private static final String MESSAGE_DB_CONNECT_ERROR = "DB connection error";
 
-	private static final String MESSAGE_DB_CLOSE_ERROR = "DB close error";
+        private static final String MESSAGE_DB_CLOSE_ERROR = "DB close error";
+
+        private static final String MESSAGE_RESERVATION_ALREADY_CANCELED = "Reservation already canceled";
 
 	private int code;
 
@@ -65,13 +69,16 @@ public class ReservationException extends Exception {
 			case CODE_DB_CONNECT_ERROR:
 				result = MESSAGE_DB_CONNECT_ERROR;
 				break;
-			case CODE_DB_CLOSE_ERROR:
-				result = MESSAGE_DB_CLOSE_ERROR;
-				break;
-			default:
-				result = "";
-				break;
-		}
+                        case CODE_DB_CLOSE_ERROR:
+                                result = MESSAGE_DB_CLOSE_ERROR;
+                                break;
+                        case CODE_RESERVATION_ALREADY_CANCELED:
+                                result = MESSAGE_RESERVATION_ALREADY_CANCELED;
+                                break;
+                        default:
+                                result = "";
+                                break;
+                }
 		return result;
 	}
 
