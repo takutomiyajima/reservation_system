@@ -5,6 +5,7 @@ package domain.room;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import util.DateUtil;
 import domain.DaoFactory;
@@ -115,6 +116,18 @@ public class RoomManager {
                 }
                 RoomDao roomDao = getRoomDao();
                 roomDao.createRoom(room);
+        }
+
+        public List getAllRooms() throws RoomException {
+                RoomDao roomDao = getRoomDao();
+                List roomNumbers = roomDao.getRooms();
+                List rooms = new ArrayList();
+                for (int i = 0; i < roomNumbers.size(); i++) {
+                        String roomNumber = (String) roomNumbers.get(i);
+                        Room room = roomDao.getRoom(roomNumber);
+                        rooms.add(room);
+                }
+                return rooms;
         }
 
 	private AvailableQtyDao getAvailableQtyDao() {

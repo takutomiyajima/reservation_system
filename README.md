@@ -54,4 +54,6 @@ java -cp "reservationsystem/Waseda-SE/bin:reservationsystem/dev_program_DB/lib/h
 java -cp "reservationsystem/Waseda-SE/bin:reservationsystem/dev_program_DB/lib/hsqldb.jar" app.cui.CUI
 ```
 
+起動後、メニューで「5」を選択すると、現在の部屋予約状況を一覧表示できます。
+
 ---
