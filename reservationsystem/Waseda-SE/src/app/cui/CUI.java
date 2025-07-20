@@ -14,6 +14,7 @@ import app.checkin.CheckInRoomForm;
 import app.checkout.CheckOutRoomForm;
 import app.reservation.ReserveRoomForm;
 import app.cancel.CancelReservationForm;
+import app.status.CheckRoomStatusForm;
 import domain.room.RoomType;
 
 /**
@@ -40,6 +41,7 @@ public class CUI {
                                 System.out.println("2: Check-in");
                                 System.out.println("3: Check-out");
                                 System.out.println("4: Cancel reservation");
+                                System.out.println("5: Room status");
                                 System.out.println("9: End");
 				System.out.print("> ");
 
@@ -67,6 +69,9 @@ public class CUI {
                                                 break;
                                         case 4:
                                                 cancelReservation();
+                                                break;
+                                        case 5:
+                                                showRoomStatus();
                                                 break;
                                 }
 			}
@@ -161,6 +166,20 @@ public class CUI {
                 cancelForm.setReservationNumber(reservationNumber);
                 cancelForm.cancel();
                 System.out.println("Cancellation has been completed.");
+        }
+
+        private void showRoomStatus() throws AppException {
+                CheckRoomStatusForm form = new CheckRoomStatusForm();
+                java.util.List rooms = form.getStatuses();
+                System.out.println("RoomNumber\tType\tStayingDate");
+                for (int i = 0; i < rooms.size(); i++) {
+                        domain.room.Room room = (domain.room.Room) rooms.get(i);
+                        String dateStr = "";
+                        if (room.getStayingDate() != null) {
+                                dateStr = util.DateUtil.convertToString(room.getStayingDate());
+                        }
+                        System.out.println(room.getRoomNumber() + "\t" + room.getType() + "\t" + dateStr);
+                }
         }
 
 	public static void main(String[] args) throws Exception {
