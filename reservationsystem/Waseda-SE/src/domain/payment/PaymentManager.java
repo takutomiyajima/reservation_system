@@ -19,8 +19,21 @@ public class PaymentManager {
 	/**
 	 * Fee per one night<br>
 	 */
-        private static final int RATE_STANDARD = 8000;
-        private static final int RATE_SUITE = 12000;
+    private static final int RATE_STANDARD = 8000;
+    private static final int RATE_SUITE = 12000;
+
+        /**
+         * Get rate per night based on room type
+         *
+         * @param roomType room type string
+         * @return rate per night
+         */
+        public int getRateByRoomType(String roomType) {
+                if (roomType != null && domain.room.RoomType.SUITE.equalsIgnoreCase(roomType)) {
+                        return RATE_SUITE;
+                }
+                return RATE_STANDARD;
+        }
 
         public void createPayment(Date stayingDate, String roomNumber) throws PaymentException,
                         NullPointerException {

@@ -15,6 +15,7 @@ import app.checkout.CheckOutRoomForm;
 import app.reservation.ReserveRoomForm;
 import app.cancel.CancelReservationForm;
 import app.status.CheckRoomStatusForm;
+import app.ManagerFactory;
 import domain.room.RoomType;
 
 /**
@@ -109,10 +110,13 @@ public class CUI {
                 reserveRoomForm.setRoomType(roomType);
                 String reservationNumber = reserveRoomForm.submitReservation();
 
-		System.out.println("Reservation has been completed.");
-		System.out.println("Arrival (staying) date is " + DateUtil.convertToString(stayingDate) + ".");
-		System.out.println("Reservation number is " + reservationNumber + ".");
-	}
+                int amount = ManagerFactory.getInstance().getPaymentManager().getRateByRoomType(roomType);
+
+                System.out.println("Reservation has been completed.");
+                System.out.println("Arrival (staying) date is " + DateUtil.convertToString(stayingDate) + ".");
+                System.out.println("Reservation number is " + reservationNumber + ".");
+                System.out.println("Charge per night is " + amount + " yen.");
+        }
 
 	private void checkInRoom() throws IOException, AppException {
 		System.out.println("Input reservation number");
